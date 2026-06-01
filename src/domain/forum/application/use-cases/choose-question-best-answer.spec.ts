@@ -1,12 +1,12 @@
-import { InMemoryAnswersRepository } from 'test/repositories/in-memory-answers-repository'
-import { makeAnswer } from 'test/factories/make-answer'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
-import { InMemoryQuestionsRepository } from 'test/repositories/in-memory-questions-repository'
 import { ChooseQuestionBestAnswerUseCase } from '@/domain/forum/application/use-cases/choose-question-best-answer'
-import { makeQuestion } from 'test/factories/make-question'
 import { NotAllowedError } from '@/core/errors/errors/not-allowed-error'
-import { InMemoryAnswerAttachmentsRepository } from 'test/repositories/in-memory-answer-attachments-repository'
-import { InMemoryQuestionAttachmentsRepository } from 'test/repositories/in-memory-question-attachments-repository'
+import { InMemoryAnswerAttachmentsRepository } from '../../../../../test/repositories/in-memory-answer-attachments-repository'
+import { InMemoryQuestionAttachmentsRepository } from '../../../../../test/repositories/in-memory-question-attachments-repository'
+import { makeAnswer } from '../../../../../test/factories/make-answer'
+import { InMemoryAnswersRepository } from '../../../../../test/repositories/in-memory-answers-repository'
+import { makeQuestion } from '../../../../../test/factories/make-question'
+import { InMemoryQuestionsRepository } from '../../../../../test/repositories/in-memory-questions-repository'
 
 let inMemoryAnswerAttachmentsRepository: InMemoryAnswerAttachmentsRepository
 let inMemoryQuestionAttachmentsRepository: InMemoryQuestionAttachmentsRepository
