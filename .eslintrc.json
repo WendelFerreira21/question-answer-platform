@@ -1,0 +1,7 @@
+{
+    "extends":"rocketseat",
+    "rules": {
+        "no-useless-constructor": "off",
+        "no-new": "off"
+    }
+}
