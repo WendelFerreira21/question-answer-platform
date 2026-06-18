@@ -1,8 +1,8 @@
 import { Either, left, right } from '@/core/either'
 import { Injectable } from '@nestjs/common'
 import { Student } from '../../enterprise/entities/student'
-import { StudentRepository } from '../repositories/student-repository'
-import { HasherGenerator } from '../crypotgraphy/hasher-generator'
+import { StudentRepository } from '../repositories/students-repository'
+import {  HashGenerator } from '../crypotgraphy/hash-generator'
 import { StudentAlreadyExistsError } from './errors/student-already-exists-error'
 
 interface RegisterStudentUseCaseRequest {
@@ -20,34 +20,34 @@ type RegisterStudentUseCaseResponse = Either<
 
 @Injectable()
 export class RegisterStudentUseCase {
-   constructor(
+  constructor(
       private studentRepository: StudentRepository,
-      private hasherGenerator: HasherGenerator
-    ) {}
+      private hasherGenerator: HashGenerator
+  ) {}
 
   async execute({
-    name,
-    email,
-    password,
-    }: RegisterStudentUseCaseRequest): Promise<RegisterStudentUseCaseResponse> {
-        const studentWithSameEmail = await this.studentRepository.findByEmail(email)
+  name,
+  email,
+  password,
+  }: RegisterStudentUseCaseRequest): Promise<RegisterStudentUseCaseResponse> {
+    const studentWithSameEmail = await this.studentRepository.findByEmail(email)
     
-        if(studentWithSameEmail) {
-            return left(new StudentAlreadyExistsError(email))
-        }
-    
-        const hashedPassword = await this.hasherGenerator.hash(password)
-    
-        const student = Student.create({
-            name,
-            email,
-            password: hashedPassword,
-        })
-
-        await this.studentRepository.create(student)
-
-        return right({
-          student,
-        })
+    if(studentWithSameEmail) {
+     return left(new StudentAlreadyExistsError(email))
     }
+    
+    const hashedPassword = await this.hasherGenerator.hash(password)
+    
+    const student = Student.create({
+      name,
+      email,
+      password: hashedPassword,
+    })
+
+    await this.studentRepository.create(student)
+
+    return right({
+     student,
+    })
+  }
 }
