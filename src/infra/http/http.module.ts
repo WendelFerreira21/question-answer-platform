@@ -4,13 +4,28 @@ import { CreateAccountController } from "./controllers/create-account.controller
 import { CreateQuestionController } from "./controllers/create-question.controller";
 import { AuthenticateController } from "./controllers/authenticate.controller";
 import { DatabaseModule } from "../database/database.module";
-import { CreateQuestionUseCase } from "../../../dist/src/domain/forum/application/use-cases/create-question";
-import { FetchRecentQuestionsUseCase } from "../../../dist/src/domain/forum/application/use-cases/fetch-recent-questions";
+import { CreateQuestionUseCase } from "@/domain/forum/application/use-cases/create-question";
+import { AuthenticateStudentUseCase } from "@/domain/forum/application/use-cases/authenticate-student";
+import { RegisterStudentUseCase } from "@/domain/forum/application/use-cases/register-student";
+import { CryptographyModule } from "../crypotgraphy/crypotgraphy.module";
+import { FetchRecentQuestionsUseCase } from "@/domain/forum/application/use-cases/fetch-recent-questions";
+import { APP_GUARD } from "@nestjs/core";
+import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 
 @Module({
-    imports: [DatabaseModule],
-    controllers: [CreateAccountController, AuthenticateController, CreateQuestionController, FetchRecentQuestionsController],
-    providers: [CreateQuestionUseCase, FetchRecentQuestionsUseCase],
+    imports: [DatabaseModule, CryptographyModule],
+    controllers: [
+      CreateAccountController, 
+      AuthenticateController, 
+      CreateQuestionController, 
+      FetchRecentQuestionsController,
+    ],
+    providers: [
+     CreateQuestionUseCase, 
+     FetchRecentQuestionsUseCase, 
+     AuthenticateStudentUseCase, 
+     RegisterStudentUseCase,
+    ],
 })
 
 export class HttpModule {}

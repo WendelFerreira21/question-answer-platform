@@ -1,7 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import { AnswerCommentsRepository } from "../../../../../dist/src/domain/forum/application/repositories/answer-comments-repository";
-import { PaginationParams } from "../../../../../dist/src/core/repositories/pagination-params";
-import { AnswerComment } from "../../../../../dist/src/domain/forum/enterprise/entities/answer-comment";
+import { AnswerCommentsRepository } from "@/domain/forum/application/repositories/answer-comments-repository";
+import { PaginationParams } from "../../../../../src/core/repositories/pagination-params";
+import { AnswerComment } from "@/domain/forum/enterprise/entities/answer-comment";
+
 
 @Injectable()
 export class PrismaAnswerCommentsRepository implements AnswerCommentsRepository {

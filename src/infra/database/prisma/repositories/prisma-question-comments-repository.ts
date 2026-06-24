@@ -1,6 +1,6 @@
+import { QuestionCommentsRepository } from "@/domain/forum/application/repositories/question-comments-repository";
+import { QuestionComment } from "@/domain/forum/enterprise/entities/question-comment";
 import { Injectable } from "@nestjs/common";
-import { QuestionCommentsRepository } from "../../../../../dist/src/domain/forum/application/repositories/question-comments-repository";
-import { QuestionComment } from "../../../../../dist/src/domain/forum/enterprise/entities/question-comment";
 
 @Injectable()
 export class PrismaQuestionCommentsRepository implements QuestionCommentsRepository {

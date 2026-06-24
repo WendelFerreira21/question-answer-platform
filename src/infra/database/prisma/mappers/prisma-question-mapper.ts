@@ -1,7 +1,7 @@
-import { UniqueEntityID } from "../../../../../dist/src/core/entities/unique-entity-id";
-import { Question } from "../../../../../dist/src/domain/forum/enterprise/entities/question";
+import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 import { Question as PrismaQuestion, Prisma } from "@prisma/client";
-import { Slug } from "../../../../../dist/src/domain/forum/enterprise/entities/value-objects/slug";
+import { Question } from "@/domain/forum/enterprise/entities/question";
+import { Slug } from "@/domain/forum/enterprise/entities/value-objects/slug";
 
 
 export class PrismaQuestionMapper {

@@ -1,9 +1,8 @@
-import { Body, ConflictException, Controller, HttpCode, Post, UnauthorizedException, UsePipes } from "@nestjs/common";
-import { PrismaService } from "../../database/prisma/prisma.service";
-import { compare, hash } from "bcryptjs"
+import { BadRequestException, Body, ConflictException, Controller, HttpCode, Post, UnauthorizedException, UsePipes } from "@nestjs/common";
 import {z} from 'zod'
 import { ZodValidationPipe } from "../pipes/zod-validation-pipe";
-import { JwtService } from "@nestjs/jwt";
+import { RegisterStudentUseCase } from "../../../../src/domain/forum/application/use-cases/register-student";
+import { StudentAlreadyExistsError } from "../../../../src/domain/forum/application/use-cases/errors/student-already-exists-error";
 
 const createAccountBodySchema = z.object({
     name: z.string(),
@@ -16,7 +15,7 @@ type CreateAccountBodySchema = z.infer<typeof createAccountBodySchema>
 
 @Controller('/accounts')
 export class CreateAccountController {
-    constructor(private prisma: PrismaService, private jwtService: JwtService) {}
+    constructor(private registerStudent: RegisterStudentUseCase) {}
     
     @Post()
     @HttpCode(201)
@@ -24,25 +23,24 @@ export class CreateAccountController {
     async handle(@Body() body:CreateAccountBodySchema) {
        const { email, name, password } = body
 
-       const userWithSameEmail = await this.prisma.user.findUnique({
-        where: {
-            email,
-        }
-       })
-
-       if(userWithSameEmail) {
-          throw new ConflictException('Email already in use')
-       }
-
-       const hashedPassword = await hash(password, 10)
-
-       await this.prisma.user.create({
-        data: {
+       const result = await this.registerStudent.execute({
             email,
             name,
-            password: hashedPassword
-        }
-       })
+            password
+        })
+        
+       
+
+        if (result.isLeft()) {
+          const error = result.value
+      
+            switch (error.constructor) {
+              case StudentAlreadyExistsError:
+               throw new ConflictException(error.message)
+              default:
+               throw new BadRequestException(error.message)
+            }
+        } 
 
     }
 }

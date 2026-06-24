@@ -1,7 +1,7 @@
 import { Either, left, right } from '@/core/either'
 import { Injectable } from '@nestjs/common'
-import { StudentRepository } from '../repositories/students-repository'
-import { HasherComparer } from '../crypotgraphy/hash-comparer'
+import { StudentsRepository } from '../repositories/students-repository'
+import { HashComparer } from '../crypotgraphy/hash-comparer'
 import { WrongCredentialsError } from './errors/wrong-credentials-error'
 import { Encrypter } from '../crypotgraphy/encrypter'
 
@@ -20,8 +20,8 @@ type AuthenticateStudentUseCaseResponse = Either<
 @Injectable()
 export class AuthenticateStudentUseCase {
   constructor(
-    private studentRepository: StudentRepository,
-    private hasherComparer: HasherComparer,
+    private studentsRepository: StudentsRepository,
+    private hashComparer: HashComparer,
     private encrypter: Encrypter
   ) {}
 
@@ -29,13 +29,13 @@ export class AuthenticateStudentUseCase {
   email,
   password,
   }: AuthenticateStudentUseCaseRequest): Promise<AuthenticateStudentUseCaseResponse> {
-    const student = await this.studentRepository.findByEmail(email)
+    const student = await this.studentsRepository.findByEmail(email)
     
     if(!student) {
       return left(new WrongCredentialsError())
     }
     
-    const isPasswordValid = await this.hasherComparer.compare(password, student.password)
+    const isPasswordValid = await this.hashComparer.compare(password, student.password)
     
     if(!isPasswordValid) {
       return left(new WrongCredentialsError())
