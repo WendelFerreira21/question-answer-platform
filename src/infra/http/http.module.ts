@@ -9,8 +9,8 @@ import { AuthenticateStudentUseCase } from "@/domain/forum/application/use-cases
 import { RegisterStudentUseCase } from "@/domain/forum/application/use-cases/register-student";
 import { CryptographyModule } from "../crypotgraphy/crypotgraphy.module";
 import { FetchRecentQuestionsUseCase } from "@/domain/forum/application/use-cases/fetch-recent-questions";
-import { APP_GUARD } from "@nestjs/core";
-import { JwtAuthGuard } from "../auth/jwt-auth.guard";
+import { GetQuestionBySlugController } from "./controllers/get-question-by-slug-controller";
+import { GetQuestionBySlugUseCase } from "../../../src/domain/forum/application/use-cases/get-question-by-slug";
 
 @Module({
     imports: [DatabaseModule, CryptographyModule],
@@ -19,12 +19,14 @@ import { JwtAuthGuard } from "../auth/jwt-auth.guard";
       AuthenticateController, 
       CreateQuestionController, 
       FetchRecentQuestionsController,
+      GetQuestionBySlugController
     ],
     providers: [
      CreateQuestionUseCase, 
      FetchRecentQuestionsUseCase, 
      AuthenticateStudentUseCase, 
      RegisterStudentUseCase,
+     GetQuestionBySlugUseCase
     ],
 })
 

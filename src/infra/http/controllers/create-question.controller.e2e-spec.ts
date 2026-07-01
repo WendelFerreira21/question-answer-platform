@@ -5,19 +5,25 @@ import { Test } from '@nestjs/testing'
 import  request  from 'supertest'
 import { hash } from 'bcryptjs'
 import { JwtService } from '@nestjs/jwt'
+import { StudentFactory } from '../../../../test/factories/make-student'
+import { DatabaseModule } from '../../../../src/infra/database/database.module'
 
 describe('Create question (E2E)', () => {
   let app: INestApplication
   let prisma: PrismaService
+  let studentFactory: StudentFactory
   let jwtToken: JwtService
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [AppModule, DatabaseModule],
+      providers: [StudentFactory],
     }).compile()
 
     app = moduleRef.createNestApplication()
+    
     prisma = moduleRef.get(PrismaService)
+    studentFactory = moduleRef.get(StudentFactory)
     jwtToken = moduleRef.get(JwtService)
 
     await app.init()
@@ -30,15 +36,9 @@ describe('Create question (E2E)', () => {
 
 
   test('[POST] /questions', async () => {
-    const user = await prisma.user.create({
-      data: {
-        name: 'Lautaro',
-        email: `lautaro-${Date.now()}@example.com`,
-        password: await hash('123456', 8),
-      },
-    })
+    const user = await studentFactory.makePrismaStudent()
 
-    const acessToken = await jwtToken.signAsync({ sub: user.id })
+    const acessToken = await jwtToken.signAsync({ sub: user.id.toString() })
 
     const response = await request(app.getHttpServer())
     .post('/questions')
