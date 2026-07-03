@@ -11,8 +11,8 @@ import { BcryptHasher } from './bcrypt-hasher'
 @Module({
   imports: [
     JwtModule.register({
-      privateKey: Buffer.from(process.env.JWT_PRIVATE!, 'base64'),
-      publicKey: Buffer.from(process.env.JWT_PUBLIC!, 'base64'),
+      privateKey: Buffer.from(process.env.JWT_PRIVATE_KEY!, 'base64'),
+      publicKey: Buffer.from(process.env.JWT_PUBLIC_KEY!, 'base64'),
       signOptions: {
         algorithm: 'RS256',
       },

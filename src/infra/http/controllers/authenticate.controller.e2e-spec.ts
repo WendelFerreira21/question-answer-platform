@@ -7,6 +7,7 @@ import { AppModule } from '../../app.module'
 import { DatabaseModule } from '../../../../src/infra/database/database.module'
 import { StudentFactory } from '../../../../test/factories/make-student'
 
+
 describe('Authenticate (E2E)', () => {
   let app: INestApplication
   let studentFactory: StudentFactory

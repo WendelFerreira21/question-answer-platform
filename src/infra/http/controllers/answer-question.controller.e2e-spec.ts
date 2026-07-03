@@ -6,52 +6,58 @@ import  request  from 'supertest'
 import { JwtService } from '@nestjs/jwt'
 import { StudentFactory } from '../../../../test/factories/make-student'
 import { DatabaseModule } from '../../../../src/infra/database/database.module'
+import { QuestionFactory } from '../../../../test/factories/make-question'
 
-
-describe('Create question (E2E)', () => {
+describe('Answer question (E2E)', () => {
   let app: INestApplication
   let prisma: PrismaService
+  let questionFactory: QuestionFactory
   let studentFactory: StudentFactory
   let jwtToken: JwtService
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
-      providers: [StudentFactory],
+      providers: [StudentFactory, QuestionFactory],
     }).compile()
 
     app = moduleRef.createNestApplication()
 
     prisma = moduleRef.get(PrismaService)
+    questionFactory = moduleRef.get(QuestionFactory)
     studentFactory = moduleRef.get(StudentFactory)
     jwtToken = moduleRef.get(JwtService)
 
     await app.init()
   })
 
-
-  test('[POST] /questions', async () => {
+  test('[POST] /questions/:questionId/answers', async () => {
     const user = await studentFactory.makePrismaStudent()
 
     const acessToken = await jwtToken.signAsync({ sub: user.id.toString() })
 
+    const question = await questionFactory.makePrismaQuestion({
+        authorId: user.id,
+    })
+
+    const questionId = question.id.toString()
+
     const response = await request(app.getHttpServer())
-    .post('/questions')
+    .post(`/questions/${questionId}/answers`)
     .set('Authorization', `Bearer ${acessToken}`)
     .send({
-        title: 'New question',
-        content: 'question content',
+        content: 'New answer',
     })
 
     expect(response.status).toBe(201)
 
-    const questionOnDatabase = await prisma.question.findFirst({
+    const answerOnDatabase = await prisma.answer.findFirst({
         where: {
-            title: 'New question'
+            content: 'New answer'
         }
     })
 
-    expect(questionOnDatabase).toBeTruthy()
+    expect(answerOnDatabase).toBeTruthy()
 
   })
 

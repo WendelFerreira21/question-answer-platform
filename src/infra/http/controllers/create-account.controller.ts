@@ -3,6 +3,7 @@ import {z} from 'zod'
 import { ZodValidationPipe } from "../pipes/zod-validation-pipe";
 import { RegisterStudentUseCase } from "../../../../src/domain/forum/application/use-cases/register-student";
 import { StudentAlreadyExistsError } from "../../../../src/domain/forum/application/use-cases/errors/student-already-exists-error";
+import { Public } from "@/infra/auth/public";
 
 const createAccountBodySchema = z.object({
     name: z.string(),
@@ -18,6 +19,7 @@ export class CreateAccountController {
     constructor(private registerStudent: RegisterStudentUseCase) {}
     
     @Post()
+    @Public()
     @HttpCode(201)
     @UsePipes(new ZodValidationPipe(createAccountBodySchema))
     async handle(@Body() body:CreateAccountBodySchema) {

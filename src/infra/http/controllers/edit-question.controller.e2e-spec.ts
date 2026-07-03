@@ -6,23 +6,25 @@ import  request  from 'supertest'
 import { JwtService } from '@nestjs/jwt'
 import { StudentFactory } from '../../../../test/factories/make-student'
 import { DatabaseModule } from '../../../../src/infra/database/database.module'
+import { QuestionFactory } from '../../../../test/factories/make-question'
 
-
-describe('Create question (E2E)', () => {
+describe('Edit question (E2E)', () => {
   let app: INestApplication
   let prisma: PrismaService
+  let questionFactory: QuestionFactory
   let studentFactory: StudentFactory
   let jwtToken: JwtService
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
-      providers: [StudentFactory],
+      providers: [StudentFactory, QuestionFactory],
     }).compile()
 
     app = moduleRef.createNestApplication()
 
     prisma = moduleRef.get(PrismaService)
+    questionFactory = moduleRef.get(QuestionFactory)
     studentFactory = moduleRef.get(StudentFactory)
     jwtToken = moduleRef.get(JwtService)
 
@@ -30,24 +32,31 @@ describe('Create question (E2E)', () => {
   })
 
 
-  test('[POST] /questions', async () => {
+  test('[PUT] /questions/:id', async () => {
     const user = await studentFactory.makePrismaStudent()
 
     const acessToken = await jwtToken.signAsync({ sub: user.id.toString() })
 
+    const question = await questionFactory.makePrismaQuestion({
+        authorId: user.id,
+    })
+
+    const questionId = question.id.toString()
+
     const response = await request(app.getHttpServer())
-    .post('/questions')
+    .put(`/questions/${questionId}`)
     .set('Authorization', `Bearer ${acessToken}`)
     .send({
         title: 'New question',
-        content: 'question content',
+        content: 'New question content',
     })
 
-    expect(response.status).toBe(201)
+    expect(response.status).toBe(204)
 
     const questionOnDatabase = await prisma.question.findFirst({
         where: {
-            title: 'New question'
+            title: 'New question',
+            content: 'New question content'
         }
     })
 
