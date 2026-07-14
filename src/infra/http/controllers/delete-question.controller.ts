@@ -5,7 +5,7 @@ import { DeleteQuestionUseCase } from "@/domain/forum/application/use-cases/dele
 
 
 @Controller('/questions/:id')
-export class DeletequestionController {
+export class DeleteQuestionController {
     constructor( private deletequestion: DeleteQuestionUseCase) {}
     
     @Delete()

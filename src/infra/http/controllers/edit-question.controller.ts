@@ -17,7 +17,7 @@ type EditquestionBodySchema = z.infer<typeof editquestionBodySchema>
 
 
 @Controller('/questions/:id')
-export class EditquestionController {
+export class EditQuestionController {
     constructor( private editquestion: EditQuestionUseCase) {}
     
     @Put()

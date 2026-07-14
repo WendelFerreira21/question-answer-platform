@@ -1,5 +1,4 @@
 import { Body, Controller, Get, Post, Query, UseGuards, BadRequestException } from "@nestjs/common";
-import { JwtAuthGuard } from "../../auth/jwt-auth.guard";
 import z from "zod";
 import { ZodValidationPipe } from "../pipes/zod-validation-pipe";
 import { QuestionPresenter } from "../presenters/question-presenter";
@@ -23,7 +22,6 @@ export class FetchRecentQuestionsController {
     
     @Get()
     async handle(@Query('page', queryValidationPipe) page:PageQueryParamSchema) {
-      const PerPage = 20;
        
       const result = await this.fetchRecentQuestions.execute({
         page
